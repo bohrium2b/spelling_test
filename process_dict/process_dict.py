@@ -24,9 +24,18 @@ def process_dict(input_dir: str, output_file: str, wordlist: str):
         # Check if the file is a CIDE file
         if file.startswith("CIDE."):
             # Parse the XML file
-            print("Preparing ...")
-            with open(os.path.join(input_dir, file), "r") as f:
-                root = BeautifulSoup(f.read(), "html.parser")
+            print(f"Preparing ... {file}")
+            try:
+                with open(os.path.join(input_dir, file), "r", encoding="utf-8") as f:
+                    root = BeautifulSoup(f.read(), "html.parser")
+            except UnicodeDecodeError:
+                try:
+                    with open(os.path.join(input_dir, file), "r", encoding="latin-1") as f:
+                        root = BeautifulSoup(f.read(), "html.parser")
+                except Exception:
+                    print(f"Error reading file {file}")
+                    continue
+            # Process the XML file
             print("Processing ...")
             # Iterate over all the <p> tags
             # Create a progress bar
@@ -62,7 +71,7 @@ def process_dict(input_dir: str, output_file: str, wordlist: str):
                     # Add the word to the dictionary
                     words[word] = {
                         "word": word,
-                        "definition": definition,
+                        "definition": definition.replace("\n", " "),
                         "pos": partsofspeech.get(pos, pos)
                     }
                     # Update the progress bar
