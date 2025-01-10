@@ -79,7 +79,7 @@ batch_size = 10
 queue = Queue()
 processes = []
 
-for i in range(0, len(words), batch_size):
+"""for i in range(0, len(words), batch_size):
     batch_words = list(words.values())[i:i+batch_size]
     p = Process(target=process_batch, args=(batch_words, args.output_dir, queue))
     processes.append(p)
@@ -87,14 +87,15 @@ for i in range(0, len(words), batch_size):
 
 for p in processes:
     p.join()
+"""
+for i in range(0, len(words), batch_size):
+    batch_words = list(words.values())[i:i+batch_size]
+    process_batch(batch_words, args.output_dir, queue)
+    sounds = queue.get()
+    save_word_data(f"{args.output_dir}/sounds.json", sounds)
+    gc.collect()
+    
 
-all_sounds = []
-while not queue.empty():
-    all_sounds.extend(queue.get())
-    if len(all_sounds) >= 10:
-        save_word_data(f"{args.output_dir}/sounds.json", all_sounds)
-        all_sounds.clear()
 
-save_word_data(f"{args.output_dir}/sounds.json", all_sounds)
 
 console.rule("Done!", style="bold green")
