@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "beedle"
+version = "0.1.0"
+description = "Learn to spelling bee."
+authors = ["bohrium2b <dzm2026@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^5.1.4"
+whitenoise = "^6.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
